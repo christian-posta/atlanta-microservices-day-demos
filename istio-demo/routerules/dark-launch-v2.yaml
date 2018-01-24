@@ -1,0 +1,18 @@
+apiVersion: config.istio.io/v1alpha2
+kind: RouteRule
+metadata:
+  name: dark-launch-httpbin-v2
+spec:
+  destination:
+    name: httpbin
+  match:
+    request:
+      headers:
+        x-dark-launch:
+          exact: "v2"
+  precedence: 10
+  route:
+  - labels:
+      version: v2
+
+      
