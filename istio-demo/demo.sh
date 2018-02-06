@@ -7,7 +7,7 @@
 
 
 # jaeger: http://localhost:16686
-# kubectl port-forward -n istio-system $(kubectl get pod -n istio-system -l app=jaeger -o jsonpath='{.items[0].metadata.me}') 16686:16686 
+# kubectl port-forward -n istio-system $(kubectl get pod -n istio-system -l app=jaeger -o jsonpath='{.items[0].metadata.name}') 16686:16686 
 
 SOURCE_DIR=$PWD
 
@@ -16,11 +16,11 @@ run "cat httpbin-v1.yaml"
 clear
 
 desc "Let's inject the istio proxy"
-run "istioctl kube-inject --tag latest --hub ceposta -f httpbin-v1.yaml"
+run "istioctl kube-inject -f httpbin-v1.yaml"
 clear
 
 desc "Let's create the httpbin service"
-run "kubectl create -f <(istioctl kube-inject --tag latest --hub ceposta -f httpbin-v1.yaml)"
+run "kubectl create -f <(istioctl kube-inject -f httpbin-v1.yaml)"
 run "kubectl get pods -w"
 
 desc "Can we query the httpbin service?"
@@ -41,7 +41,7 @@ tmux send-keys -t 1 "kubectl logs -f $HTTPBIN_V1 -c httpbin" C-m
 #tmux send-keys -t 1 "kubectl logs -f --since=1s $HTTPBIN_V1 -c httpbin" C-m
 
 desc "Start up our benchmarking test"
-run "kubectl create -f <(istioctl kube-inject --tag latest --hub ceposta -f fortio-deploy.yaml --debug)"
+run "kubectl create -f <(istioctl kube-inject -f fortio-deploy.yaml --debug)"
 run "kubectl get pods -w"
 
 FORTIO_POD=$(kubectl get pod | grep fortio | awk '{ print $1 }')
@@ -57,7 +57,7 @@ tmux send-keys -t 1 "kubectl logs -f --since=1s $HTTPBIN_V1 -c httpbin" C-m
 
 desc "Let's create a version 2 of our httpbin service"
 read -s 
-run "kubectl create -f <(istioctl kube-inject --tag latest --hub ceposta -f httpbin-v2.yaml)"
+run "kubectl create -f <(istioctl kube-inject -f httpbin-v2.yaml)"
 
 run "kubectl get pods -w"
 
