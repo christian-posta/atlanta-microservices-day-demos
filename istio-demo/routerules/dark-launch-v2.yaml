@@ -10,7 +10,7 @@ spec:
       headers:
         x-dark-launch:
           exact: "v2"
-  precedence: 10
+  precedence: 15
   route:
   - labels:
       version: v2

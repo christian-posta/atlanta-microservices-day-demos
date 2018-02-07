@@ -11,5 +11,5 @@ spec:
     spec:
       containers:
       - name: fortio
-        image: istio/fortio:latest
+        image: istio/fortio:0.6.5
         imagePullPolicy: Always
